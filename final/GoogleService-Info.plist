@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>925699372036-qnum9m5aurbk115h8c53a84ec7qg1596.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.925699372036-qnum9m5aurbk115h8c53a84ec7qg1596</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBEaKtCBu3t1QjQguF9kXIdy96eQFmyU1A</string>
+	<key>GCM_SENDER_ID</key>
+	<string>925699372036</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.bignerdranch.final</string>
+	<key>PROJECT_ID</key>
+	<string>gamingapp-26426</string>
+	<key>STORAGE_BUCKET</key>
+	<string>gamingapp-26426.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:925699372036:ios:c847bb8a39e8307b</string>
+	<key>DATABASE_URL</key>
+	<string>https://gamingapp-26426.firebaseio.com</string>
+</dict>
+</plist>
