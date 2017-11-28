@@ -11,18 +11,25 @@
  have to get it from the database every time. Need to add
  games array and other user info like location, time zone
 */
+
+import CoreData
+
 class User {
     
     var userName:String
     var name:String
     var email:String
     var userID:String
+    var games:[Game]?
+    var region:Region
     
-    init(userName:String, name:String,email:String,userID:String) {
+    init(userName:String, name:String,email:String,userID:String, games:[Game]?, region:Region) {
         self.userName = userName
         self.name = name
         self.email = email
         self.userID = userID
+        self.games = games
+        self.region = region
     }
     
 }

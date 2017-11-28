@@ -14,12 +14,18 @@
  the login screen so they can log in
 */
 
+/*TODO 
+ 1. put a games section when appending user to users list
+ 2. put an error field for the name section and region section
+*/
 import UIKit
 import Firebase
 
-class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextFieldDelegate {
+class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
     //outlets
+    @IBOutlet weak var pickerTextField: UITextField!
+    @IBOutlet weak var regionPicker: UIPickerView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var usernameField: UITextField! //tag = 1
@@ -34,6 +40,8 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
     //used when user enters a username
     //to track if it is a duplicate
     var isDuplicateUserame = false
+    
+    let regions = ["Select Region", "N. America","S. America","Europe","Asia"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +60,11 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
         
         //keyboard extension (see bottom of page)
         self.hideKeyboardWhenTappedAround()
+        
+        //set up region Picker view
+        regionPicker.delegate = self
+        pickerTextField.isEnabled = false
+        
         
     }
     
@@ -83,7 +96,7 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
      text field. Used by usernameField to check if the entered username is alread taken.
     */
     func textFieldDidEndEditing(_ textField: UITextField) {
-        print("did end editing called")
+        
         //check if caller is the username field
         if textField.tag == 1 {
             //check if he username is ttaken
@@ -113,7 +126,7 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
         }
         //email field clicked off
         else if textField.tag == 2 {
-            print("clicked off of emial fielf")
+            
             
             let emailPattern = "[a-zA-Z0-9]+\\@[a-zA-Z0-9]+\\.[a-z]{3}"
             let emailStr = emailField.text
@@ -131,7 +144,7 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
         }
         //password field clicked off
         else if textField.tag == 3 {
-            print("password field clicked off")
+            
             if (passwordField.text?.characters.count)! < 8 || (passwordField.text?.characters.count)! > 15 {
                 passwordError.isHidden = false
             }
@@ -215,7 +228,7 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
         
         //testing name field
         //starts with capital letter and has any number of letters afer
-        let namePattern = "^[a-z][a-z]+"
+        let namePattern = "^[A-Z][a-z]+"
         let nameStr = nameField.text
         let nameRegex = try! NSRegularExpression(pattern: namePattern, options: [])
         let nameMatches = nameRegex.matches(in: nameStr!,options:[],range:NSRange(location:0,length:(nameStr?.characters.count)!))
@@ -245,63 +258,93 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
             valid = false
         }
         
+        //checking region field
+        if (self.pickerTextField.text?.isEmpty)! || self.pickerTextField.text == "Select Region"{
+            print("Must select a region")
+            valid = false
+        }
+        
         return valid
         
     }
     
     @IBAction func submitButtonPressed(sender:UIButton){
-        
+        print("pressed submit button")
         //check that the form is valid
         if formIsValid(){
-            print("in form is valid")
+            print("form valid")
             //make sure form values are valid. If not then return
             guard let username = usernameField.text, let email = emailField.text,let name = nameField.text, let password = passwordField.text else {
                 return
             }
-            //register user
-            Auth.auth().createUser(withEmail: email, password: password)
-            print("user registered")
             
-            //update the users info in the database
-            if Auth.auth().currentUser != nil {
-                print("updating user")
-                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-                changeRequest?.displayName = username
-                changeRequest?.commitChanges { (error) in
-                    print(error)
+            
+            //create new user in database
+            Auth.auth().createUser(withEmail: self.emailField.text!, password: self.passwordField.text!) { (user, error) in
+                
+                //creation failed
+                if error != nil {
+                    print("failed to register user \(error)")
+                    return
                 }
+                //craetion success
+                else{
+                    
+                    //sign in user
+                    Auth.auth().signIn(withEmail: self.emailField.text!, password:self.passwordField.text!) { (signinUser, signinError) in
+                        
+                        //sign in failed
+                        if signinError != nil{
+                            print("sign in failed")
+                        }
+                        //sign in success
+                        else{
+                            var newUser = User(userName: self.usernameField.text!, name: self.nameField.text!, email: self.emailField.text!, userID: (signinUser?.uid)!, games: nil, region: Region.stringToCase(string: (self.pickerTextField?.text)!))
+                            DatabaseHelper.appendToUsers(user: newUser)
+                            DatabaseHelper.appendToTakenUsernames(username: newUser.userName)
+                            
+                            self.showToast(message: "Registration Successful", segueIdentifier: "ShowLoginVCSegue")
+                        }
+                        
+                    }
+                }
+                
             }
             
-            //get a User object containing the new users info
-            var newUser = DatabaseHelper.getCurrentUser()
             
-            //make sure the new user object is not nil
-            if newUser != nil {
-                print("got current user")
-                //add the info to the username
-                newUser?.name = name
-                newUser?.userName = username
-                
-                
-                print("updated user info")
-                //add users username to the takenUsernames list
-                DatabaseHelper.appendToTakenUsernames(username:username)
-                print("added username to taken list")
-                
-                DatabaseHelper.appendToUsers(user: newUser!)
-                
-            }
-            
-            //show toast confirming the registration then
-            //segue back to login screen
-            self.showToast(message: "Registration Successful", segueIdentifier : "ShowLoginVCSegue")
         
         }
         //form invalid just return
         else{
+            print("form invalid")
             return
         }
     }
+    
+    //sets number of column in pickerView
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    //sets number of rows in picker view
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return regions.count
+    }
+    
+    //sets text for row of pickerView that is selected
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return regions[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if regions[row] == "Select Region"{
+            return
+        }
+        else{
+            pickerTextField.text = regions[row]
+        }
+    }
+    
     
     
 }
@@ -331,7 +374,7 @@ extension UIViewController {
         toastLabel.layer.cornerRadius = 10
         toastLabel.clipsToBounds = true
         self.view.addSubview(toastLabel)
-        UIView.animate(withDuration:4.0,delay:0.1,options: .curveEaseOut, animations: {
+        UIView.animate(withDuration:3.0,delay:0.1,options: .curveEaseOut, animations: {
             toastLabel.alpha = 0.0
         },completion: {(isCompleted) in
             toastLabel.removeFromSuperview()
