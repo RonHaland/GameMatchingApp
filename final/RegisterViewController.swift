@@ -82,19 +82,14 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
      Called when a textfield is clicked on. Used to 
      diable the errors for that field
     */
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        //dont know if this actually does anything
-        scrollView.isScrollEnabled = true
-        let viewRect: CGRect = textField.frame
-        scrollView.scrollRectToVisible(viewRect, animated: true)
-    
-    }
     
     
     /*
     Delagate method that triggers when user clicks out of a
      text field. Used by usernameField to check if the entered username is alread taken.
     */
+    
+    //TODO: Handle empty field
     func textFieldDidEndEditing(_ textField: UITextField) {
         
         //check if caller is the username field
@@ -162,9 +157,6 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
     func keyboardWillShow(notification: NSNotification){
         print("TRIGGERED")
         
-        //enable scrolling of scrollview so screen can move
-        scrollView.isScrollEnabled = true
-        
         //get size of keyboard
         let userInfo: NSDictionary = notification.userInfo! as NSDictionary
         let keyboardInfo = userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue
@@ -186,9 +178,6 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
     func keyboardWillHide(notification:NSNotification){
         print("TRIGGERED")
         
-        //disable scrolling
-        scrollView.isScrollEnabled =  false
-        
         //get size of keyboard
         let userInfo: NSDictionary = notification.userInfo! as NSDictionary
         let keyboardInfo = userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue
@@ -200,7 +189,7 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
         scrollView.contentInset = contentInsets
         
         //scroll scrollview up to top
-        scrollView.contentOffset.y = 0
+        //scrollView.contentOffset.y = 0
         
     }
     
