@@ -15,7 +15,6 @@ This class interacts with core data to easily save users info to core data or ge
  */
 
 import CoreData
-import Foundation
 import UIKit
 
 class CoreDataHelper {

@@ -19,7 +19,10 @@
  2. put an error field for the name section and region section
 */
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
+import FirebaseAuth
 
 class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -186,8 +189,6 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
     func keyboardWillHide(notification:NSNotification){
         print("TRIGGERED")
         
-        //disable scrolling
-        scrollView.isScrollEnabled =  false
         
         //get size of keyboard
         let userInfo: NSDictionary = notification.userInfo! as NSDictionary

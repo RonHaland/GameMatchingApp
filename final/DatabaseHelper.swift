@@ -6,7 +6,11 @@
 //  Copyright © 2017 Benjamin Dagg. All rights reserved.
 //
 
-import Firebase
+import FirebaseAnalytics
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
+import FirebaseAuth
 
 /*
  This class lets you interact with the database from anywhere

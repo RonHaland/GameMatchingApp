@@ -20,13 +20,19 @@
 
  */
 
+
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
+import FirebaseAuth
 import CoreData
+ 
 
 //reference to storage on Firebase databse
 let storage = Storage.storage()
 let storageRef = storage.reference()
+
 
 
 class ProfileViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {

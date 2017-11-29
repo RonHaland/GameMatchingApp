@@ -23,12 +23,14 @@
  2. not sending username correctly to profile
  */
 
+
 import UIKit
-import Firebase
 import FirebaseDatabase
 import FirebaseAuth
+import FirebaseStorage
+import FirebaseAuth
 
-
+ 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
     //outlets

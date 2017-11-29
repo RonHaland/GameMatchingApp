@@ -7,7 +7,10 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
+import FirebaseAuth
 /* TODO
  1. getGameIcon is putting wrong game icon in the imageview
  2. redo gameProperties dict to include name and get ride of allGames
