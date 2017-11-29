@@ -328,7 +328,11 @@
 				TargetAttributes = {
 					5B8CC9411F854840002DCC45 = {
 						CreatedOnToolsVersion = 8.3.3;
+<<<<<<< HEAD
 						LastSwiftMigration = 0830;
+=======
+						DevelopmentTeam = FKG44PNF2G;
+>>>>>>> 908c5d1a9e08d2d0ac515d9864430f702d9298ac
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
@@ -736,8 +740,18 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = final/final.entitlements;
+<<<<<<< HEAD
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
+=======
+				DEVELOPMENT_TEAM = FKG44PNF2G;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Pods/**",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/Core/Sources",
+					"\"${PODS_ROOT}/leveldb-library/\"",
+					"\"${PODS_ROOT}/leveldb-library/include\"",
+>>>>>>> 908c5d1a9e08d2d0ac515d9864430f702d9298ac
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/FirebaseAnalytics/Frameworks",
 				);
@@ -766,8 +780,18 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = final/final.entitlements;
+<<<<<<< HEAD
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
+=======
+				DEVELOPMENT_TEAM = FKG44PNF2G;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Pods/**",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/Core/Sources",
+					"\"${PODS_ROOT}/leveldb-library/\"",
+					"\"${PODS_ROOT}/leveldb-library/include\"",
+>>>>>>> 908c5d1a9e08d2d0ac515d9864430f702d9298ac
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/FirebaseAnalytics/Frameworks",
 				);
