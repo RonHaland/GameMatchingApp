@@ -4,20 +4,21 @@
 ### Connect with similar gamers
 
 This app aims to connect gamers with others who play the same games at similar times.
-It will give its users a list of similar players and give them tools to connect with them.
+Players can make posts for what kinds of players they are looking for and send messages
 ___
 ### Profile
 Each user can add and remove games from their profile, they are allowed to have a favorite game that will be displayed for others when they send messages.
 ___
-### Search
-The search will look for other registered users who play the game you are searching for at a similar skill level and similar time as the user
+### Posts
+The users can make/ read posts and respond to them by sending a message to the poster
 
 | Goal Features | Implemented |
 |---------------|:-------------:|
 | Login/Register|:white_check_mark:|
-|Profile page||
-|Edit Profile||
-|Add/edit personal games||
-|Search for similar players||
-|Message system||
+|Profile page|:white_check_mark:|
+|Edit Profile|:white_check_mark:|
+|Add/edit personal games|:white_check_mark:|
+|Display posts|:white_check_mark:|
+|Make posts|:white_check_mark:|
+|Message system|:white_check_mark:|
 |Notifications||
