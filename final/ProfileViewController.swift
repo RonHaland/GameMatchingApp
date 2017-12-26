@@ -35,9 +35,10 @@ let storageRef = storage.reference()
 
 
 
-class ProfileViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {
+class ProfileViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating, UITabBarControllerDelegate {
     
     
+    @IBOutlet weak var favGameLabel: UILabel!
     
     @IBOutlet weak var regionLabel: UILabel!
     @IBOutlet weak var gameNavBar: UINavigationItem!
@@ -49,6 +50,7 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
     
     let searchController = UISearchController(searchResultsController: nil)
     var filteredGames:[Game] = []
+    var profilePermission:ProfilePermission = ProfilePermission.EDIT_AND_VIEW
     
     
     //user object for this users profile
@@ -59,12 +61,14 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         
-        if let games = self.targetUser?.games {
+        self.tabBarController?.delegate = self
+        
+        if (self.targetUser?.games) != nil {
             
         }
         
         super.viewDidLoad()
-        print("user username ===== \(targetUser?.userName)")
+        print("user username ===== \(targetUser?.userName ?? "none")")
         
        //set up table view
         self.gamesTableView.delegate = self
@@ -74,10 +78,20 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
         title = "Profile"
         
         if let user = targetUser {
-            self.nameLabel.text = user.name
+            self.nameLabel.adjustsFontSizeToFitWidth = true
+            self.usernameLabel.adjustsFontSizeToFitWidth = true
+            self.nameLabel.text = "Name: \(user.name)"
             self.usernameLabel.text = user.userName
-            self.regionLabel.text = user.region.rawValue
+            self.regionLabel.text = "Region: \(user.region.rawValue)"
         }
+        
+        //add logout button to navigation bar if this is users profile
+        if self.profilePermission == .EDIT_AND_VIEW {
+            let logoutBtn = UIBarButtonItem(title:  "Logout" as String, style: .plain, target: self, action: #selector(logout))
+            self.navigationItem.leftBarButtonItem = logoutBtn
+        }
+        
+        
         
         //hides keyboard when usr click out
         hideKeyboardWhenTappedAround()
@@ -90,27 +104,36 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
         searchController.searchBar.placeholder = "Search Games"
         definesPresentationContext = true
         
-        //add edit btn to nav controller
-        let editBtn = UIBarButtonItem(title: "Edit", style: .done, target: self, action:#selector(editProfile))
-        self.navigationItem.rightBarButtonItem = editBtn
-        
-        //add delete button to games nav controller
-        let deleteBtn = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(enableEditing))
-        self.gameNavBar.leftBarButtonItem = deleteBtn
-        
-        if let user = self.targetUser {
-            if let CDUser = CoreDataHelper.getUser(email: user.email){
-                print("got user from CD")
-                print("core data getUser = \(CDUser.userName)")
-            }else{
-                print(")failed to get user from CD")
+        if self.profilePermission == .EDIT_AND_VIEW {
+            //add edit btn to nav controller
+            let editBtn = UIBarButtonItem(title: "Edit", style: .done, target: self, action:#selector(editProfile))
+            editBtn.tintColor = #colorLiteral(red: 0, green: 0.9914394021, blue: 1, alpha: 1)
+            self.navigationItem.rightBarButtonItem = editBtn
+            
+            //add delete button to games nav controller
+            let deleteBtn = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(enableEditing))
+            deleteBtn.tintColor = #colorLiteral(red: 0, green: 0.9914394021, blue: 1, alpha: 1)
+            self.gameNavBar.leftBarButtonItem = deleteBtn
+            
+            if let user = self.targetUser {
+                if let CDUser = CoreDataHelper.getUser(email: user.email){
+                    print("got user from CD")
+                    print("core data getUser = \(CDUser.userName)")
+                }else{
+                    print(")failed to get user from CD")
+                }
             }
+
+        }else {
+            self.gameNavBar.rightBarButtonItem = nil
         }
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.favGameLabel.isHidden = true
         
         updateUserInfo()
         
@@ -125,24 +148,68 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
             getUserProfileImgifExists()
         }
         
-        //make table view not in edit mode
-        self.gamesTableView.isEditing = false
-        self.gameNavBar.leftBarButtonItem?.title = "Delete"
-        
-        if let user = self.targetUser {
-            CoreDataHelper.loadUserFromCD(username: user.userName)
+        if self.profilePermission == .EDIT_AND_VIEW {
+            //make table view not in edit mode
+            self.gamesTableView.isEditing = false
+            self.gameNavBar.leftBarButtonItem?.title = "Delete"
+            
+            if let user = self.targetUser {
+                _ = CoreDataHelper.loadUserFromCD(username: user.userName)
+            }
         }
+        
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        //save users info to core data
-        if let user = self.targetUser {
-            CoreDataHelper.saveUserToCD(user: user)
+        if self.profilePermission == .EDIT_AND_VIEW {
+            //save users info to core data
+            if let user = self.targetUser {
+                CoreDataHelper.saveUserToCD(user: user)
+            }
         }
+        
     }
+    
+    
+    
+    
+    func logout(sender: UIBarButtonItem) {
+        
+        let alert = UIAlertController(title: "Logout", message: "Are you sure you want to logout?", preferredStyle: .alert)
+        //if hit cancel button do nothing
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction) in
+            //do nothing and close
+        }))
+        //ok button logs out user then goes back to login screen
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction) in
+            
+            //logout
+            do {
+                try Auth.auth().signOut()
+                print("user logged out")
+                
+                //unwind to logout view controller
+                self.performSegue(withIdentifier: "logoutUnwind", sender: self)
+            } catch {
+                let failedAlert = UIAlertController(title: "Logout Failed", message: "Something went wrong trying to logout", preferredStyle: .alert)
+                //if hit cancel button do nothing
+                failedAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction) in
+                    //do nothing and close
+                }))
+                self.present(failedAlert,animated: true,completion: nil)
+            }
+            
+        }))
+        //show alert
+        present(alert,animated:true,completion:nil)
+        
+    }
+    
+    
+    
     
     /*
      Called when delete button pressed. Puts game table view in editing mode
@@ -232,6 +299,7 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
                 destination?.game = self.targetUser?.games?[index]
                 
             }
+            destination?.profilePermissions = self.profilePermission
         }
         if segue.identifier == "ShowEditProfileVC" {
             if let destination = segue.destination as? EditProfileViewController {
@@ -243,6 +311,7 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
             }
             
         }
+        
     }
     
     
@@ -259,7 +328,13 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
                             self.targetUser?.userName = username
     
                         }
-                       
+                        if let favGame = value["favGame"] as? String {
+                            DispatchQueue.main.async {
+                                self.favGameLabel.adjustsFontSizeToFitWidth = true
+                                self.favGameLabel.isHidden = false
+                                self.favGameLabel.text = "Favorite Game: \(favGame)"
+                            }
+                        }
                         if let uid = value["uid"] as? String {
                             self.targetUser?.userID = uid
                         }
@@ -275,7 +350,8 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
                         print("updated values")
                         DispatchQueue.main.async {
                             if let user = self.targetUser {
-                                self.regionLabel.text = user.region.rawValue
+                                self.regionLabel.adjustsFontSizeToFitWidth = true
+                                self.regionLabel.text = "Region: \(user.region.rawValue)"
                                 
                             }
                         }
@@ -359,7 +435,7 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
             cell.gamePlatformImg.image = UIImage(named: "xbox360logo")
         case .XboxOne:
             cell.gamePlatformImg.image = UIImage(named: "xboxonelogo")
-        default: break
+        //default: break
             
         }
         
@@ -451,5 +527,17 @@ class ProfileViewController : UIViewController, UITableViewDelegate, UITableView
     
     
     
+    //when tab bar item is selected, transfer the user to that controller
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        UserTransfer.sharedInstance.currentUser = self.targetUser
+    }
     
+    
+    
+}
+extension String {
+    func convertHTMLSymbol() throws -> String? {
+        guard let data = data(using: .utf8) else {return nil}
+        return try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType,NSCharacterEncodingDocumentAttribute:String.Encoding.utf8.rawValue], documentAttributes: nil).string
+    }
 }

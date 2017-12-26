@@ -37,6 +37,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         super.viewDidLoad()
         
         scrollView.delegate = self
+        scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: 1200)
         
         //dont know what this does but makes it look better
         self.imagePicker.modalPresentationStyle = .overCurrentContext
@@ -65,6 +66,21 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         //make text fields un-editable
         self.favGameField.isUserInteractionEnabled = false
         self.regionField.isUserInteractionEnabled = false
+        
+        //resize text on choose image button to fit width
+        self.chooseImgBtn.titleLabel?.numberOfLines = 0
+        self.chooseImgBtn.titleLabel?.adjustsFontSizeToFitWidth = true
+        self.chooseImgBtn.titleLabel?.lineBreakMode = .byWordWrapping
+    }
+    
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        //setup scrollview content size
+        self.scrollView.frame = self.view.frame
+        self.scrollView.contentSize = CGSize(width: self.view.frame.width, height:1000)
     }
     
     
@@ -185,7 +201,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                             //the userGames array for the fav game picker
                             self.userGames.removeAll()
                             if let games = self.userInfo["games"] as? NSDictionary {
-                                for (key, element) in games {
+                                for (key, _) in games {
                                     self.userGames.append(key as! String)
                                 }
                                 DispatchQueue.main.async {
@@ -211,7 +227,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
         else if let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage{
             imageView.image = originalImage
             var data = NSData()
-            data = UIImageJPEGRepresentation(imageView.image!, 0.8) as! NSData
+            data = UIImageJPEGRepresentation(imageView.image!, 0.8)! as NSData
             let filePath = "profileImages/\(user!.userName)/\("imageView")"
             let metaData = StorageMetadata()
             metaData.contentType = "image/jpg"
@@ -220,7 +236,7 @@ class EditProfileViewController: UIViewController, UIImagePickerControllerDelega
                     print(error.localizedDescription)
                     return
                 }else{
-                    let downloadURL = metaData!.downloadURL()?.absoluteString
+                    //let downloadURL = metaData!.downloadURL()?.absoluteString
                     if let user = self.user {
                         let ref = Database.database().reference()
                         ref.child("users").child(user.userName).child("userPhoto").setValue(filePath)

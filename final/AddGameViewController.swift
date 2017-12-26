@@ -54,7 +54,6 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
             print("username ======= \(usr.userName)")
         }
         
-        self.scrollView.contentSize = CGSize(width:375,height:1400)
         
         //add bar button item to nav bar
         let doneBtn = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneBtnPressed))
@@ -79,21 +78,30 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
         self.roleField.addTarget(self, action:#selector(roleFieldClicked), for: .touchDown)
         self.scrollView.delegate = self
         
+        //hide keyboard when clcik on background
+        hideKeyboardWhenTappedAround()
+        ///notifications for when keyboard pops up
+        //keyboard notificaions
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
+        //closes keyboard when user clicks on background
+        hideKeyboardWhenTappedAround()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if self.usersGames != nil {
+            getAllGames()
+        }
         
-        
-        getAllGames()
-        gamePicker.reloadAllComponents()
         
         //hide the image view and picker until user clicks select game button
+        
         self.selectedGameImg.isHidden = true
-        self.gamePicker.isHidden = true
+        self.gamePicker.isHidden =  false
         self.platformContainerView.isHidden = true
         self.platformPicker.isHidden = true
         self.rankContainer.isHidden = true
@@ -102,7 +110,76 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
         self.rolePicker.isHidden = true
         self.selectedGameImg.image = nil
         
+        //make scrollview text fields un-editable
+        self.gameField.isEnabled = true
+        self.platformField.isEnabled = true
+        self.roleField.isEnabled = true
+        
+        gamePicker.reloadAllComponents()
+
+ 
     }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        //setup scrollview content size
+        self.scrollView.frame = self.view.frame
+        self.scrollView.contentSize = CGSize(width: self.view.frame.width, height:1500)
+    }
+    
+    
+    
+    /*
+     This function called when recieve a notification
+     that the keyboard has popped up
+     */
+    func keyboardWillShow(notification: NSNotification){
+        print("TRIGGERED")
+        
+        //enable scrolling of scrollview so screen can move
+        scrollView.isScrollEnabled = true
+        
+        //get size of keyboard
+        let userInfo: NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardInfo = userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue
+        let keyboardSize = keyboardInfo.cgRectValue.size
+        
+        //adjust scrollview insets for keyboard
+        var contentInsets = scrollView.contentInset
+        contentInsets.bottom = keyboardSize.height
+        scrollView.contentInset = contentInsets
+        
+        
+    }
+    
+    
+    /*
+     this  function called when recieve notificationn that
+     keyboard has been dismissed
+     */
+    func keyboardWillHide(notification:NSNotification){
+        print("TRIGGERED")
+        
+        
+        //get size of keyboard
+        let userInfo: NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardInfo = userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue
+        let keyboardSize = keyboardInfo.cgRectValue.size
+        
+        //adjust scrollview insets
+        var contentInsets = scrollView.contentInset
+        contentInsets.bottom  = contentInsets.bottom - keyboardSize.height
+        scrollView.contentInset = contentInsets
+        
+        //scroll scrollview up to top
+        //scrollView.contentOffset.y = 0
+        
+    }
+
+    
+    
     
     func doneBtnPressed(sender: UIBarButtonItem){
         print("done butn pressen")
@@ -114,13 +191,13 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
                 let gameInfo = gameProperties[gameName] as? NSDictionary
                 //check that info is not nil
                 if let info = gameInfo {
-                    print(gameInfo)
+                    //print(gameInfo)
                     //get id 0f game
                     let gameID = info["id"] as? String
                     if let id = gameID {
                         print("id = \(id)")
                         //make new game dictionary to append to database
-                        var newGame = ["id":id, "platform":self.platformField.text] as [String : Any]
+                        var newGame = ["id":id, "platform":self.platformField.text ?? "unknown platform"] as [String : Any]
                         //check if the optional fields are not nil if they arent then add them to the dict
                         if let rank = self.rankField.text {
                             if rank.isEmpty == false{
@@ -161,10 +238,10 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
     //game to the users profile and segue
     func formIsValid() -> Bool {
         var valid = true
-        if self.gameField.text?.isEmpty == true || self.gameField.text == "Select One"{
+        if self.gameField.text?.isEmpty == true || self.gameField.text == "Select One" || gameField.text == ""{
             valid = false
         }
-        if self.platformField.text?.isEmpty == true || self.platformField.text == "Choose One"{
+        if self.platformField.text?.isEmpty == true || self.platformField.text == "Choose One" || platformField.text == ""{
             valid = false
         }
         if self.rankContainer.isHidden == false && self.rankField.text?.isEmpty == true {
@@ -219,6 +296,9 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
         
         
         if pickerView == self.gamePicker {
+            if allGames[row] == "" {
+                return
+            }
         //index into the gameInfo dictionary
         let index = allGames[row]
         let gameInfo = gameProperties[index] as? NSDictionary
@@ -231,9 +311,11 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
         self.gameStackView.isHidden = false
         self.gamePicker.isHidden = false
         self.platformContainerView.isHidden = false
+        self.platformPicker.isHidden = false
         
         
         if let gameInfo = gameInfo {
+            
             let gamePlatforms = gameInfo["platforms"] as? NSDictionary
         
             //store the game platforms in the platofrms item picker
@@ -241,9 +323,14 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
                 print("gmae platforms: \(gamePlatforms)")
                 //delete all elements from platform array
                 self.platforms.removeAll()
-                for (key, element) in gamePlatforms {
+                for (key, _) in gamePlatforms {
                     print("key = \(key)")
                     self.platforms.append(key as! String)
+                }
+                //if platforms only has 1 add blank space
+                if platforms.count <= 1 {
+                    platforms.append("")
+                    platforms.append("")
                 }
                 self.platformPicker.reloadAllComponents()
                 print("platofrms has \(platforms.count)")
@@ -252,21 +339,21 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
             //show/hide game properties based on the selected game
             let info = gameInfo["properties"] as? NSDictionary
             if let info = info {
-                if let rank = info["rank"] as? Int{
+                if (info["rank"] as? Int) != nil{
                     self.rankContainer.isHidden = false
                     self.rankField.isHidden = false
                 }else{
                     self.rankContainer.isHidden = true
                     self.rankField.isHidden = true
                 }
-                if let role = info["role"] as? Int{
+                if (info["role"] as? Int) != nil{
                     self.roleContainer.isHidden = false
                     self.roleField.isHidden = false
                 }else{
                     self.roleContainer.isHidden = true
                     self.roleField.isHidden = true
                 }
-                if let level = info["level"] as? Int{
+                if (info["level"] as? Int) != nil{
                     self.levelContainer.isHidden = false
                     self.levelField.isHidden = false
                 }else{
@@ -288,13 +375,16 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
             
         }
         
-        print(gameInfo)
+        //print(gameInfo)
         }
         else if pickerView == self.rolePicker {
             self.roleField.text = roles[row]
             self.scrollView.isScrollEnabled = true
         }
         else{
+            if platforms[row] == "" {
+                return
+            }
             //set the platform field text to the selected item
             self.platformField.text = self.platforms[row]
             self.scrollView.isScrollEnabled = true
@@ -317,7 +407,7 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
         
             //if picker is hidden then show it
             if gamePicker.isHidden == true {
-                scrollView.isScrollEnabled = false
+                scrollView.isScrollEnabled = true
                 self.selectedGameImg.isHidden = true
                 UIView.animate(withDuration: 0.25, animations: {
                     self.selectedGameImg.isHidden = true
@@ -345,7 +435,7 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
         //if picker is hidden then show it
         if platformPicker.isHidden == true {
             self.platformPicker.reloadAllComponents()
-            scrollView.isScrollEnabled = false
+            scrollView.isScrollEnabled = true
             UIView.animate(withDuration: 0.25, animations: {
             
                 self.platformPicker.isHidden = false
@@ -370,7 +460,7 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
         //if picker is hidden then show it
         if rolePicker.isHidden == true {
             self.rolePicker.reloadAllComponents()
-            scrollView.isScrollEnabled = false
+            scrollView.isScrollEnabled = true
             UIView.animate(withDuration: 0.25, animations: {
                 
                 self.rolePicker.isHidden = false
@@ -414,7 +504,7 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
                         else{
                              //store database info as a dictionary
                              let value = child.value as? NSDictionary
-                             let gameTitle = child.key
+                             //let gameTitle = child.key
                              let gameId = value?["id"] as? String
                             //get game id so we can look up its icon
                             if let id = gameId {
@@ -426,6 +516,10 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
                                     
                                     if let value = value{
                                         self.gameProperties[child.key] = value
+                                    }
+                                    
+                                    DispatchQueue.main.async {
+                                        self.gamePicker.reloadAllComponents()
                                     }
                                     
                                 }
@@ -440,13 +534,18 @@ class AddGameViewController: UIViewController, UITextFieldDelegate, UIPickerView
                     }
                     
                 }
-
+                if self.allGames.count <= 1 {
+                    self.allGames.append("")
+                    self.allGames.append("")
+                }
+                
             }
             //snapshot failed
             else{
                 print("failed to find games. Snapshot not found")
             }
         })
+        
     }
     
     

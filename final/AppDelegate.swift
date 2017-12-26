@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             do {
                 try context.save()
             }catch {
-                let nserror = error as NSError
+                _ = error as NSError
                 
             }
         }

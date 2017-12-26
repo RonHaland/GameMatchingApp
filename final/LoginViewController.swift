@@ -67,6 +67,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         //keyboard extension to dismiss keyboard(see bottom of RegisterViewController)
         self.hideKeyboardWhenTappedAround()
         
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,7 +83,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
          self.navigationItem.setHidesBackButton(true, animated: true)
         loadUsername()
+        
+        let date = NSDate()
+        let interval = date.timeIntervalSince1970
+        print("date = \(date)")
+        print("interval = \(interval)")
     }
+    
+    
+    
+
     
     /*
      Textfield delegate methode that is called when user
@@ -154,29 +165,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     //if login fail error is up then disable it
                     self.loginFailError.isHidden = true
                     
-                    /*
-                    //get current user info in a User object
-                    let currentUser = DatabaseHelper.getCurrentUser()
                     
-                    if let email = currentUser?.email {
-                        print("if let email")
-                        
-                        DatabaseHelper.getUsername(email: email) { result in
-                           currentUser?.userName = result
-                            self.passedUser.userName = result
-                            print("result ---- \(result)")
-                        DatabaseHelper.getUserGames(username: result) { games in
-                                currentUser?.games = games
-                                self.passedUser = currentUser!
-                            
-                            }
-                        DatabaseHelper.getNameByUsername(username: result) {name in
-                                print("found name \(name)")
-                                self.passedUser.name = name
-                            }
-                        }
-                    }
-                    */
                     
                     //try and get user from core data if it exists
                     if let user = CoreDataHelper.getUser(email: self.usernameField.text!) {
@@ -228,7 +217,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         })
                     }
                     //save username to directory
-                    self.saveUsername(username: self.passedUser.email)
+                    if self.saveUsername(username: self.passedUser.email){
+                        print("saved")
+                    }
                     //show toast an segue to ProfileViewController
                     self.showToast(message: "Login Successful", segueIdentifier : "ShowProfileVCSegue")
                     
@@ -267,7 +258,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         //segue from LoginViewController to RegisterViewController
         if segue.identifier == "ShowRegisterVCSegue" {
-            if let destinationVC = segue.destination as? RegisterViewController {
+            if segue.destination is RegisterViewController {
                 
             }
         }
@@ -284,6 +275,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
             
         }
+        
+    }
+    
+    
+    
+    //lets profile view controller come backk to login screen to logout
+    @IBAction func unwindFromLogout(sender: UIStoryboardSegue) {
         
     }
 }

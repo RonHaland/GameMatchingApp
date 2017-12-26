@@ -74,6 +74,8 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.pickerTextField.isUserInteractionEnabled = false
+        
         //make errors hidden
         self.usernameError.isHidden = true
         self.emailError.isHidden = true
@@ -81,18 +83,37 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
     }
     
     
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        //setup scrollview content size
+        self.scrollView.frame = self.view.frame
+        self.scrollView.contentSize = CGSize(width: 375, height:900)
+    }
+    
+    
+    
+    
+    
     /*
      Called when a textfield is clicked on. Used to 
      diable the errors for that field
     */
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        //dont know if this actually does anything
+        scrollView.isScrollEnabled = true
+        let viewRect: CGRect = textField.frame
+        scrollView.scrollRectToVisible(viewRect, animated: true)
+    
+    }
     
     
     /*
     Delagate method that triggers when user clicks out of a
      text field. Used by usernameField to check if the entered username is alread taken.
     */
-    
-    //TODO: Handle empty field
     func textFieldDidEndEditing(_ textField: UITextField) {
         
         //check if caller is the username field
@@ -101,6 +122,11 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
             guard let username = usernameField.text else {
                 return
             }
+            
+            if username.isEmpty || username == "" {
+                return
+            }
+            
             //call database to check for username
             DatabaseHelper.usernameTaken(username:username, completion: { result in
                 //set the global dupe variable to the resultt
@@ -160,6 +186,9 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
     func keyboardWillShow(notification: NSNotification){
         print("TRIGGERED")
         
+        //enable scrolling of scrollview so screen can move
+        scrollView.isScrollEnabled = true
+        
         //get size of keyboard
         let userInfo: NSDictionary = notification.userInfo! as NSDictionary
         let keyboardInfo = userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue
@@ -181,10 +210,7 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
     func keyboardWillHide(notification:NSNotification){
         print("TRIGGERED")
         
-<<<<<<< HEAD
         
-=======
->>>>>>> 908c5d1a9e08d2d0ac515d9864430f702d9298ac
         //get size of keyboard
         let userInfo: NSDictionary = notification.userInfo! as NSDictionary
         let keyboardInfo = userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue
@@ -224,12 +250,7 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
         
         //testing name field
         //starts with capital letter and has any number of letters afer
-        let namePattern = "^[A-Z][a-z]+"
-        let nameStr = nameField.text
-        let nameRegex = try! NSRegularExpression(pattern: namePattern, options: [])
-        let nameMatches = nameRegex.matches(in: nameStr!,options:[],range:NSRange(location:0,length:(nameStr?.characters.count)!))
-        //if result array is empty then it didnt pass the regex
-        if nameMatches.count == 0 {
+        if (self.nameField.text?.isEmpty)! || self.nameField.text == "" {
             valid = false
         }
         
@@ -264,15 +285,24 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
         
     }
     
+    //disable horizontal scrolling on scroll view
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.x > 0 || scrollView.contentOffset.x < 0 {
+            scrollView.contentOffset.x = 0
+        }
+    }
+    
+    
+    
     @IBAction func submitButtonPressed(sender:UIButton){
         print("pressed submit button")
         //check that the form is valid
         if formIsValid(){
             print("form valid")
             //make sure form values are valid. If not then return
-            guard let username = usernameField.text, let email = emailField.text,let name = nameField.text, let password = passwordField.text else {
+            /*guard le_me = usernameField.text, let email = emailField.text,let name = nameField.text, let password = passwordField.text else {
                 return
-            }
+            }*/
             
             
             //create new user in database
@@ -280,7 +310,7 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
                 
                 //creation failed
                 if error != nil {
-                    print("failed to register user \(error)")
+                    //print("failed to register user \(error)")
                     return
                 }
                 //craetion success
@@ -295,7 +325,7 @@ class RegisterViewController: UIViewController,UIScrollViewDelegate, UITextField
                         }
                         //sign in success
                         else{
-                            var newUser = User(userName: self.usernameField.text!, name: self.nameField.text!, email: self.emailField.text!, userID: (signinUser?.uid)!, games: nil, region: Region.stringToCase(string: (self.pickerTextField?.text)!))
+                            let newUser = User(userName: self.usernameField.text!, name: self.nameField.text!, email: self.emailField.text!, userID: (signinUser?.uid)!, games: nil, region: Region.stringToCase(string: (self.pickerTextField?.text)!))
                             DatabaseHelper.appendToUsers(user: newUser)
                             DatabaseHelper.appendToTakenUsernames(username: newUser.userName)
                             

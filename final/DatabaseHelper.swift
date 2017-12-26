@@ -24,7 +24,7 @@ class DatabaseHelper {
     static func getUser(){
         
         //there is a user logged in
-        if let user = Auth.auth().currentUser {
+        if Auth.auth().currentUser != nil {
             
             /*
             let group = DispatchGroup()
@@ -64,12 +64,11 @@ class DatabaseHelper {
                 while let child = enumerator.nextObject() as? DataSnapshot {
                     let value = child.value as? NSDictionary
                     
-                    if let email = value?["email"] as? String {
-                        
-                        guard let name = value?["name"] as? String, let id = value?["uid"] as? String, let username = value?["username"] as? String, let region = value?["region"] as? String else{
+                    if (value?["email"] as? String) != nil {
+                        guard let _ = value?["name"] as? String, let _ = value?["uid"] as? String, let _ = value?["username"] as? String, let _ = value?["region"] as? String else{
                             return
                         }
-                        let user = User(userName: username, name: name, email: email, userID: id, games: nil, region:Region.stringToCase(string: region))
+                        //let user = User(userName: username, name: name, email: email, userID: id, games: nil, region:Region.stringToCase(string: region))
                         
                     }
                     
@@ -138,7 +137,7 @@ class DatabaseHelper {
             var email:String
             var uid:String
             var name:String
-            var games:[Game]?
+            //var games:[Game]?
             
             
             if let username = user?.displayName{
@@ -237,7 +236,7 @@ class DatabaseHelper {
             while let rest = enumerator.nextObject() as? DataSnapshot {
                 
                 
-                let childSnapshot = snapshot.childSnapshot(forPath: rest.key)
+                //let childSnapshot = snapshot.childSnapshot(forPath: rest.key)
                 let value = rest.value as? NSDictionary
                 let gameId = value?["id"] as? String?
                 
@@ -260,7 +259,7 @@ class DatabaseHelper {
             while let child = enumerator.nextObject() as? DataSnapshot {
                 let value = child.value as? NSDictionary
                 let childEmail = value?["email"] as? String?
-                print("child email = \(childEmail)")
+                print("child email = \(String(describing: childEmail ?? "none"))")
                 if childEmail! == email {
                     print("found username")
                     completion(child.key)
@@ -339,14 +338,14 @@ class DatabaseHelper {
                     let platform = value?["platform"] as? String
                     let childPlatform = Platform(rawValue: platform!)
                     
-                    print("searching for id \(childId)")
+                    //print("searching for id \(childId ?? "none")")
                     //now that we have the id get the game info
                     //from the game tab
                     
-                    getGameTitleById(id: childId as! String) { result in
+                    getGameTitleById(id: childId!!) { result in
                         print("found result \(result)")
                         
-                        downloadGameIcon(id: childId as! String) { icon in
+                        downloadGameIcon(id: childId!!) { icon in
                             
                         
                             //add result to list
@@ -398,8 +397,51 @@ class DatabaseHelper {
     }
     
     
-    
-    
-    
-    
+    static func getUserMessages(username:String, completion: @escaping ([Message])->Void) {
+        let group = DispatchGroup()
+        print("fetching messages1")
+        ref.child("users").child(username).child("messages").observeSingleEvent(of: .value, with: { snapshot in
+            if snapshot.exists(){
+                group.enter()
+                var messages:[Message] = []
+                let enumerator = snapshot.children
+                while let child = enumerator.nextObject() as? DataSnapshot {
+                    print("1")
+                    let value = child.value as? NSDictionary
+                    if let value = value {
+                        print("2")
+                        guard let fromUser = value["sender"] as? String, let toUser = value["reciever"] as? String, let timeSent = value["date"] as? String , let messageContent = value["content"] as? String else {
+                            return
+                        }
+                        print("11")
+                        var isSender = false
+                        if username == fromUser{
+                            isSender = true
+                            print("187126")
+                        }
+                        print("appending")
+                        let timeDate = Date(timeIntervalSince1970: Double(timeSent)!/10)
+                        messages.append(Message(sender: fromUser, reciever: toUser, isSender:isSender, date: timeDate, message: messageContent))
+                    }
+                }
+                print("messages to deliver: \(messages)")
+                completion(messages)
+            }
+        })
+    }
+    static func getContacts(username:String, completion: @escaping ([String])->Void) {
+        let group = DispatchGroup()
+        ref.child("users").child(username).child("contacts").observeSingleEvent(of: .value, with: {snapshot in
+            if snapshot.exists(){
+                var contacts:[String] = []
+                let enumerator = snapshot.children
+                group.enter()
+                while let child = enumerator.nextObject() as? DataSnapshot {
+                    contacts.append(child.key)
+                }
+                completion(contacts)
+                
+            }
+        })
+    }
 }

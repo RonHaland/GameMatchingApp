@@ -15,8 +15,12 @@
 		5B23CE981F89D43100EB6F01 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5B23CE971F89D43100EB6F01 /* GoogleService-Info.plist */; };
 		5B23CE991F89D43100EB6F01 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5B23CE971F89D43100EB6F01 /* GoogleService-Info.plist */; };
 		5B23CE9A1F89D43100EB6F01 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5B23CE971F89D43100EB6F01 /* GoogleService-Info.plist */; };
+		5B2B536D1FD0FF0D008E566D /* UserTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2B536C1FD0FF0D008E566D /* UserTransfer.swift */; };
+		5B2B536F1FD10754008E566D /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2B536E1FD10754008E566D /* PostTableViewCell.swift */; };
+		5B2B53711FD111AF008E566D /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2B53701FD111AF008E566D /* Post.swift */; };
 		5B4D63D21FA2D64B00708399 /* GameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4D63D11FA2D64B00708399 /* GameTableViewCell.swift */; };
 		5B4D63D41FA2D8E000708399 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4D63D31FA2D8E000708399 /* Game.swift */; };
+		5B5C63111FD5EC2A001AFD82 /* ProfilePermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5C63101FD5EC2A001AFD82 /* ProfilePermission.swift */; };
 		5B5D13DD1FB04BE600C75629 /* AddGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5D13DC1FB04BE600C75629 /* AddGameViewController.swift */; };
 		5B71594B1FC29A7600C21C82 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B71594A1FC29A7500C21C82 /* EditProfileViewController.swift */; };
 		5B79CB411F99567C000A29E4 /* DatabaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79CB401F99567C000A29E4 /* DatabaseHelper.swift */; };
@@ -33,8 +37,16 @@
 		5B8CC9781F88326B002DCC45 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8CC9771F88326B002DCC45 /* RegisterViewController.swift */; };
 		5BA73E5B1FA7C02200064FD1 /* Region.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA73E5A1FA7C02200064FD1 /* Region.swift */; };
 		5BA73E5D1FA7C0D600064FD1 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA73E5C1FA7C0D600064FD1 /* Platform.swift */; };
+		5BA989711FD3C32D00CFF962 /* AddPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA989701FD3C32D00CFF962 /* AddPostViewController.swift */; };
+		5BA989731FD5229500CFF962 /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA989721FD5229500CFF962 /* PostDetailViewController.swift */; };
+		5BA989751FD5B17400CFF962 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA989741FD5B17400CFF962 /* Message.swift */; };
+		5BA989771FD5B18B00CFF962 /* MessageDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA989761FD5B18B00CFF962 /* MessageDetailsViewController.swift */; };
+		5BA989791FD5B19900CFF962 /* Messages.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BA989781FD5B19900CFF962 /* Messages.storyboard */; };
+		5BA9897C1FD5B1A700CFF962 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA9897A1FD5B1A700CFF962 /* MessagesViewController.swift */; };
+		5BA9897D1FD5B1A700CFF962 /* NewMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA9897B1FD5B1A700CFF962 /* NewMessageViewController.swift */; };
 		5BBBBD911FC525DA00BF5F52 /* GameApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5BBBBD8F1FC525DA00BF5F52 /* GameApp.xcdatamodeld */; };
 		5BBBBD931FC52A2700BF5F52 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBBBD921FC52A2700BF5F52 /* CoreDataHelper.swift */; };
+		5BBFB3C61FCF850000235DDD /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFB3C51FCF850000235DDD /* PostViewController.swift */; };
 		5BC1C32E1FC683AC000EB57E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BC1C32D1FC683AC000EB57E /* CoreData.framework */; };
 		65527B4381C0FD76ED893266 /* Pods_finalUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1F6ABF8747B263DA847E29C /* Pods_finalUITests.framework */; };
 		DCFD69D20988437C0B1BAFC1 /* Pods_final.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C889AE15C365DC91D7D6A41 /* Pods_final.framework */; };
@@ -68,8 +80,12 @@
 		5B0464321FCE7BA7009E8D03 /* FirebaseNanoPB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseNanoPB.framework; path = Pods/FirebaseAnalytics/Frameworks/FirebaseNanoPB.framework; sourceTree = "<group>"; };
 		5B1618551F89DA3200FC25E8 /* final.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = final.entitlements; sourceTree = "<group>"; };
 		5B23CE971F89D43100EB6F01 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5B2B536C1FD0FF0D008E566D /* UserTransfer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTransfer.swift; sourceTree = "<group>"; };
+		5B2B536E1FD10754008E566D /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
+		5B2B53701FD111AF008E566D /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		5B4D63D11FA2D64B00708399 /* GameTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameTableViewCell.swift; sourceTree = "<group>"; };
 		5B4D63D31FA2D8E000708399 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		5B5C63101FD5EC2A001AFD82 /* ProfilePermission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfilePermission.swift; sourceTree = "<group>"; };
 		5B5D13DC1FB04BE600C75629 /* AddGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddGameViewController.swift; sourceTree = "<group>"; };
 		5B71594A1FC29A7500C21C82 /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		5B79CB401F99567C000A29E4 /* DatabaseHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseHelper.swift; sourceTree = "<group>"; };
@@ -92,8 +108,16 @@
 		5B8CC9771F88326B002DCC45 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		5BA73E5A1FA7C02200064FD1 /* Region.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Region.swift; sourceTree = "<group>"; };
 		5BA73E5C1FA7C0D600064FD1 /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
+		5BA989701FD3C32D00CFF962 /* AddPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPostViewController.swift; sourceTree = "<group>"; };
+		5BA989721FD5229500CFF962 /* PostDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
+		5BA989741FD5B17400CFF962 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = ../../app/final/Message.swift; sourceTree = "<group>"; };
+		5BA989761FD5B18B00CFF962 /* MessageDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageDetailsViewController.swift; sourceTree = "<group>"; };
+		5BA989781FD5B19900CFF962 /* Messages.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Messages.storyboard; path = ../../app/final/Messages.storyboard; sourceTree = "<group>"; };
+		5BA9897A1FD5B1A700CFF962 /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		5BA9897B1FD5B1A700CFF962 /* NewMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageViewController.swift; sourceTree = "<group>"; };
 		5BBBBD901FC525DA00BF5F52 /* GameApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GameApp.xcdatamodel; sourceTree = "<group>"; };
 		5BBBBD921FC52A2700BF5F52 /* CoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
+		5BBFB3C51FCF850000235DDD /* PostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		5BC1C32D1FC683AC000EB57E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		72F0D441487F2EB8A83530E7 /* Pods-finalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-finalTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-finalTests/Pods-finalTests.release.xcconfig"; sourceTree = "<group>"; };
 		7952E043EB9CA70EE1143EDE /* Pods-final.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-final.release.xcconfig"; path = "Pods/Target Support Files/Pods-final/Pods-final.release.xcconfig"; sourceTree = "<group>"; };
@@ -166,6 +190,7 @@
 				5BA73E591FA7A5B700064FD1 /* Classes */,
 				5BA73E581FA7A58700064FD1 /* View Controllers */,
 				5B1618551F89DA3200FC25E8 /* final.entitlements */,
+				5BA989781FD5B19900CFF962 /* Messages.storyboard */,
 				5B8CC9451F854840002DCC45 /* AppDelegate.swift */,
 				5B8CC9491F854840002DCC45 /* Main.storyboard */,
 				5B8CC94C1F854840002DCC45 /* Assets.xcassets */,
@@ -198,12 +223,18 @@
 		5BA73E581FA7A58700064FD1 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				5BA9897A1FD5B1A700CFF962 /* MessagesViewController.swift */,
+				5BA9897B1FD5B1A700CFF962 /* NewMessageViewController.swift */,
+				5BA989761FD5B18B00CFF962 /* MessageDetailsViewController.swift */,
 				5B838BF61F9FF4B200E7AA19 /* ProfileViewController.swift */,
 				5B8CC9731F854882002DCC45 /* LoginViewController.swift */,
 				5B5D13DC1FB04BE600C75629 /* AddGameViewController.swift */,
 				5B8CC9771F88326B002DCC45 /* RegisterViewController.swift */,
 				5B8C8D171FBCA9F200200644 /* EditGameViewController.swift */,
 				5B71594A1FC29A7500C21C82 /* EditProfileViewController.swift */,
+				5BBFB3C51FCF850000235DDD /* PostViewController.swift */,
+				5BA989701FD3C32D00CFF962 /* AddPostViewController.swift */,
+				5BA989721FD5229500CFF962 /* PostDetailViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -211,6 +242,7 @@
 		5BA73E591FA7A5B700064FD1 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				5BA989741FD5B17400CFF962 /* Message.swift */,
 				5B79CB401F99567C000A29E4 /* DatabaseHelper.swift */,
 				5B79CB421F99586A000A29E4 /* User.swift */,
 				5B4D63D11FA2D64B00708399 /* GameTableViewCell.swift */,
@@ -218,6 +250,10 @@
 				5BA73E5A1FA7C02200064FD1 /* Region.swift */,
 				5BA73E5C1FA7C0D600064FD1 /* Platform.swift */,
 				5BBBBD921FC52A2700BF5F52 /* CoreDataHelper.swift */,
+				5B2B536C1FD0FF0D008E566D /* UserTransfer.swift */,
+				5B2B536E1FD10754008E566D /* PostTableViewCell.swift */,
+				5B2B53701FD111AF008E566D /* Post.swift */,
+				5B5C63101FD5EC2A001AFD82 /* ProfilePermission.swift */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -328,11 +364,8 @@
 				TargetAttributes = {
 					5B8CC9411F854840002DCC45 = {
 						CreatedOnToolsVersion = 8.3.3;
-<<<<<<< HEAD
-						LastSwiftMigration = 0830;
-=======
 						DevelopmentTeam = FKG44PNF2G;
->>>>>>> 908c5d1a9e08d2d0ac515d9864430f702d9298ac
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
@@ -380,6 +413,7 @@
 				5B8CC9501F854840002DCC45 /* LaunchScreen.storyboard in Resources */,
 				5B23CE981F89D43100EB6F01 /* GoogleService-Info.plist in Resources */,
 				5B8CC94D1F854840002DCC45 /* Assets.xcassets in Resources */,
+				5BA989791FD5B19900CFF962 /* Messages.storyboard in Resources */,
 				5B8CC94B1F854840002DCC45 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -568,20 +602,31 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B71594B1FC29A7600C21C82 /* EditProfileViewController.swift in Sources */,
+				5BA989731FD5229500CFF962 /* PostDetailViewController.swift in Sources */,
 				5BA73E5D1FA7C0D600064FD1 /* Platform.swift in Sources */,
 				5BA73E5B1FA7C02200064FD1 /* Region.swift in Sources */,
 				5BBBBD911FC525DA00BF5F52 /* GameApp.xcdatamodeld in Sources */,
 				5B8C8D181FBCA9F200200644 /* EditGameViewController.swift in Sources */,
+				5BA9897C1FD5B1A700CFF962 /* MessagesViewController.swift in Sources */,
 				5B5D13DD1FB04BE600C75629 /* AddGameViewController.swift in Sources */,
 				5BBBBD931FC52A2700BF5F52 /* CoreDataHelper.swift in Sources */,
+				5B2B536D1FD0FF0D008E566D /* UserTransfer.swift in Sources */,
 				5B4D63D21FA2D64B00708399 /* GameTableViewCell.swift in Sources */,
+				5BBFB3C61FCF850000235DDD /* PostViewController.swift in Sources */,
 				5B838BF71F9FF4B300E7AA19 /* ProfileViewController.swift in Sources */,
 				5B79CB411F99567C000A29E4 /* DatabaseHelper.swift in Sources */,
+				5BA989771FD5B18B00CFF962 /* MessageDetailsViewController.swift in Sources */,
 				5B8CC9781F88326B002DCC45 /* RegisterViewController.swift in Sources */,
 				5B8CC9741F854882002DCC45 /* LoginViewController.swift in Sources */,
+				5BA9897D1FD5B1A700CFF962 /* NewMessageViewController.swift in Sources */,
 				5B79CB431F99586A000A29E4 /* User.swift in Sources */,
 				5B8CC9461F854840002DCC45 /* AppDelegate.swift in Sources */,
+				5B5C63111FD5EC2A001AFD82 /* ProfilePermission.swift in Sources */,
+				5BA989751FD5B17400CFF962 /* Message.swift in Sources */,
+				5BA989711FD3C32D00CFF962 /* AddPostViewController.swift in Sources */,
+				5B2B53711FD111AF008E566D /* Post.swift in Sources */,
 				5B4D63D41FA2D8E000708399 /* Game.swift in Sources */,
+				5B2B536F1FD10754008E566D /* PostTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -735,23 +780,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A2A9E2B020BC2B00D7D0D202 /* Pods-final.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = final/final.entitlements;
-<<<<<<< HEAD
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = (
-=======
 				DEVELOPMENT_TEAM = FKG44PNF2G;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/Pods/**",
-					"$(inherited)",
-					"${PODS_ROOT}/Firebase/Core/Sources",
-					"\"${PODS_ROOT}/leveldb-library/\"",
-					"\"${PODS_ROOT}/leveldb-library/include\"",
->>>>>>> 908c5d1a9e08d2d0ac515d9864430f702d9298ac
+				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/FirebaseAnalytics/Frameworks",
 				);
@@ -780,18 +815,8 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = final/final.entitlements;
-<<<<<<< HEAD
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = (
-=======
 				DEVELOPMENT_TEAM = FKG44PNF2G;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/Pods/**",
-					"$(inherited)",
-					"${PODS_ROOT}/Firebase/Core/Sources",
-					"\"${PODS_ROOT}/leveldb-library/\"",
-					"\"${PODS_ROOT}/leveldb-library/include\"",
->>>>>>> 908c5d1a9e08d2d0ac515d9864430f702d9298ac
+				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/FirebaseAnalytics/Frameworks",
 				);

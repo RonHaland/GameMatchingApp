@@ -38,6 +38,7 @@ class EditGameViewController: UIViewController, UIScrollViewDelegate, UITextFiel
     var roles:[String] = ["DPS", "Support", "Tank", "Offtank", "Carry", "Jungle", "ADC"]
     var platforms:[String] = []
     var isFavorite:Bool = false
+    var profilePermissions:ProfilePermission = .EDIT_AND_VIEW
     
     
     override func viewDidLoad() {
@@ -58,19 +59,22 @@ class EditGameViewController: UIViewController, UIScrollViewDelegate, UITextFiel
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         hideKeyboardWhenTappedAround()
         
-        //navigation buttons
-        //edit button
-        let editBtn = UIBarButtonItem(title: "Edit", style: .done, target: self, action:#selector(enableEditing))
-        //star button
-        let star = FAKFontAwesome.starOIcon(withSize: 30.0) as FAKFontAwesome
-        star.addAttribute(NSForegroundColorAttributeName, value: UIColor.white)
-        let favBtn = UIButton(type: UIButtonType.system) as UIButton
-        favBtn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        favBtn.setImage(star.image(with: CGSize(width: 30, height: 30)), for: .normal)
-        favBtn.addTarget(self, action: #selector(favorite), for: .touchUpInside)
-        let favBarBtn = UIBarButtonItem(customView: favBtn)
+        if profilePermissions == .EDIT_AND_VIEW {
+            //navigation buttons
+            //edit button
+            let editBtn = UIBarButtonItem(title: "Edit", style: .done, target: self, action:#selector(enableEditing))
+            //star button
+            let star = FAKFontAwesome.starOIcon(withSize: 30.0) as FAKFontAwesome
+            star.addAttribute(NSForegroundColorAttributeName, value: UIColor.white)
+            let favBtn = UIButton(type: UIButtonType.system) as UIButton
+            favBtn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+            favBtn.setImage(star.image(with: CGSize(width: 30, height: 30)), for: .normal)
+            favBtn.addTarget(self, action: #selector(favorite), for: .touchUpInside)
+            let favBarBtn = UIBarButtonItem(customView: favBtn)
+            
+            self.navigationItem.rightBarButtonItems = [editBtn,favBarBtn]
+        }
         
-        self.navigationItem.rightBarButtonItems = [editBtn,favBarBtn]
         
         //set up pickers
         self.platformPicker.delegate = self
@@ -197,10 +201,10 @@ class EditGameViewController: UIViewController, UIScrollViewDelegate, UITextFiel
             let ref = Database.database().reference()
             if let user = self.user {
                 if let game = self.game {
-                    let key = ref.child("users").child(user.userName).child("games").child(game.title)
+                    //let key = ref.child("users").child(user.userName).child("games").child(game.title)
                     let id = self.gameInfo["id"] as? String
                     if let id = id {
-                    var newGame = ["id":id, "platform":self.platformField.text] as [String : Any]
+                    var newGame = ["id":id, "platform":self.platformField.text ?? "unknown platform"] as [String : Any]
                     //check if the optional fields are not nil if they arent then add them to the dict
                     if let rank = self.rankField.text {
                         if rank.isEmpty == false && self.rankField.isHidden == false{
@@ -240,6 +244,10 @@ class EditGameViewController: UIViewController, UIScrollViewDelegate, UITextFiel
     called when done bar button item clicked. Enables editing mode and makes the textfields visible and editable
     */
     func enableEditing(sender: UIBarButtonItem){
+        
+        if self.profilePermissions == .VIEW_ONLY {
+            return
+        }
         
         //not in edit mode so enable edit mode
         if self.editMode == false {
@@ -389,13 +397,18 @@ class EditGameViewController: UIViewController, UIScrollViewDelegate, UITextFiel
     
     
     func favorite(){
+        
+        if self.profilePermissions == .VIEW_ONLY {
+            return
+        }
+        
         //is this game is the favorite then remove it
         if self.isFavorite {
             let alert = UIAlertController(title: "Confirm", message: "Remove this game as your favorite?", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: {(alert: UIAlertAction!) in
                 let ref = Database.database().reference()
                 if let user = self.user {
-                    if let game = self.game {
+                    if self.game != nil {
                         ref.child("users").child(user.userName).child("favGame").setValue(nil)
                     }
                 }
@@ -451,6 +464,15 @@ class EditGameViewController: UIViewController, UIScrollViewDelegate, UITextFiel
                 favBtn.tintColor = UIColor.yellow
                 self.navigationItem.rightBarButtonItems = [editBtn,favBarBtn]
             }
+        }
+    }
+    
+    
+    
+    //disable horizontal scrolling on scroll view
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.x > 0 || scrollView.contentOffset.x < 0 {
+            scrollView.contentOffset.x = 0
         }
     }
     

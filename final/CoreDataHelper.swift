@@ -51,7 +51,7 @@ class CoreDataHelper {
             let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
             
             //make new user and enter info
-            var newUser = NSEntityDescription.insertNewObject(forEntityName: "Users", into: context) as! Users
+            let newUser = NSEntityDescription.insertNewObject(forEntityName: "Users", into: context) as! Users
             newUser.email = user.email
             newUser.name = user.name
             newUser.region = user.region.rawValue
@@ -89,8 +89,8 @@ class CoreDataHelper {
             if fetchedResults.count != 0 {
                 //create new Users entity and return it
                 if let fetchedUser:Users  = fetchedResults[0] as? Users {
-                    print("core data fetch results = \(fetchedUser.username)")
-                    print("core data fetched region = \(fetchedUser.region)")
+                    print("core data fetch results = \(fetchedUser.username ?? "unknown")")
+                    print("core data fetched region = \(fetchedUser.region ?? "unknown")")
                     print("returning this suer")
                     return fetchedUser
                 }
