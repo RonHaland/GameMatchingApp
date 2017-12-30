@@ -16,12 +16,11 @@ class Message:NSObject{
     var date:Date
     var message:String
     
-    init(sender:String, reciever:String, date:Date, message:String) {
+    init(sender:String, reciever:String, date:Date, message:String, isSender:Bool) {
         self.sender = sender
         self.reciever = reciever
         self.date = date
         self.message = message
-        let isSender = (arc4random_uniform(2) == 0)
         if isSender {
             self.displayName = reciever
         } else {
